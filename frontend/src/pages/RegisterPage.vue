@@ -1,9 +1,12 @@
 <template>
-    <div class="login-container">
-        <h2>Login to TaskFlow</h2>
-        <form @submit.prevent="handleLogin">
+    <div class="register-container">
+        <h2>Register to TaskFlow</h2>
+        <form @submit.prevent="handleRegister">
             <div>
                 <input v-model="email" type="email" placeholder="Email" required />
+            </div>
+            <div>
+                <input v-model="name" type="name" placeholder="Name" required>
             </div>
             <div>
                 <input v-model="password" type="password" placeholder="Password" required>
@@ -12,9 +15,9 @@
             }}</button>
 
             <p v-if="authStore.error" class="error">{{ authStore.error }}</p>
-            <p> Don't have an account ?
+            <p> Already have an account ?
 
-                <router-link to="/register">Register</router-link>
+                <router-link to="/login">Login</router-link>
             </p>
         </form>
     </div>
@@ -28,12 +31,14 @@ import { useRouter } from 'vue-router';
 
 
 const email = ref('');
+const name = ref('');
 const password = ref('');
 const router = useRouter();
 const authStore = useAuthStore();
 
-const handleLogin = async () => {
-    const success = await authStore.login({ email: email.value, password: password.value });
+
+const handleRegister = async () => {
+    const success = await authStore.register({ email: email.value, name: name.value, password: password.value });
 
     if (success) {
         router.push('/board');
@@ -42,7 +47,7 @@ const handleLogin = async () => {
 </script>
 
 <style scoped>
-.login-container {
+.register-container {
     max-width: 400px;
     margin: 50px auto;
     padding: 20px;
