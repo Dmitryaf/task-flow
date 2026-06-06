@@ -1,8 +1,11 @@
 import express from "express";
 import cors from "cors";
+import dotenv from "dotenv";
 
 import authRouter from "./routes/auth";
-import taskRouter from "./routes/tasks";
+import tasksRouter from "./routes/tasks";
+
+dotenv.config();
 
 const app = express();
 
@@ -10,10 +13,11 @@ app.use(cors());
 app.use(express.json());
 
 // Роуты
-app.use("/api/auth", authRouter);
-app.use("/api/tasks", taskRouter);
 
-app.get("api/health", (req, res) => {
+app.use("/api/auth", authRouter);
+app.use("/api/tasks", tasksRouter);
+
+app.get("/api/health", (req, res) => {
   res.json({ status: "ok", message: "Backend is running" });
 });
 
