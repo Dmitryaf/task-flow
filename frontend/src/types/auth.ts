@@ -1,17 +1,17 @@
-import type { User } from ".";
+import type { User } from '.';
 
 export interface AuthRes {
-    token: string;
-    user: User
+  token: string;
+  user: User;
 }
 
 export interface LoginData {
-    email: string;
-    password: string;
+  email: string;
+  password: string;
 }
 
 export interface RegisterData {
-    email: string;
-    password: string;
-    name: string;
+  email: string;
+  password: string;
+  name: string;
 }
