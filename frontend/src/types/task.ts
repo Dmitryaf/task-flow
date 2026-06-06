@@ -7,3 +7,13 @@ export interface Task {
   userId: number;
   createdAt: string;
 }
+
+export interface CreateTaskData {
+  title: string;
+  status?: TaskStatus;
+}
+
+export interface UpdateTaskData {
+  title?: string;
+  status?: TaskStatus;
+}
