@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { DRAG_DATA_MIME_TYPE } from '@/constants/tasks';
 import { type Task } from '@/types/task';
 
 const props = defineProps<{
@@ -6,13 +7,11 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-  (e: 'dragstart', taskId: number): void;
   (e: 'delete', taskId: number): void;
 }>();
 
 const onDragStart = (event: DragEvent) => {
-  event.dataTransfer?.setData('text/plain', props.task.id.toString());
-  emit('dragstart', props.task.id);
+  event.dataTransfer?.setData(DRAG_DATA_MIME_TYPE, props.task.id.toString());
 };
 
 const onDelete = () => {

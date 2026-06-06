@@ -4,6 +4,8 @@ import { useRouter } from 'vue-router';
 import { useAuthStore } from '@/stores/auth';
 import TaskColumn from '@/components/TaskColumn.vue';
 import { useTasksStore } from '@/stores/tasks';
+import { TASK_COLUMNS } from '@/constants/tasks';
+import { ROUTE_LOGIN } from '@/constants/routes';
 import { type TaskStatus } from '@/types/task';
 
 const router = useRouter();
@@ -35,7 +37,7 @@ const deleteTask = async (taskId: number) => {
 
 const handleLogout = () => {
   authStore.logout();
-  router.push('/login');
+  router.push(ROUTE_LOGIN);
 };
 </script>
 
@@ -60,31 +62,18 @@ const handleLogout = () => {
       <button :disabled="!newTaskTitle.trim()" @click="createTask">Add</button>
     </div>
 
-    <div v-if="!tasksStore.loading" class="columns">
+    <div v-if="tasksStore.loading" class="loading">Loading tasks...</div>
+    <div v-else-if="tasksStore.error" class="error">{{ tasksStore.error }}</div>
+    <div v-else class="columns">
       <TaskColumn
-        title="To Do"
-        status="todo"
-        :tasks="tasksStore.getTaskByStatus('todo')"
+        v-for="column in TASK_COLUMNS"
+        :key="column.status"
+        :title="column.title"
+        :status="column.status"
+        :tasks="tasksStore.getTaskByStatus(column.status)"
         @drop="moveTask"
         @delete="deleteTask"
       />
-      <TaskColumn
-        title="In Progress"
-        status="in-progress"
-        :tasks="tasksStore.getTaskByStatus('in-progress')"
-        @drop="moveTask"
-        @delete="deleteTask"
-      />
-      <TaskColumn
-        title="Done"
-        status="done"
-        :tasks="tasksStore.getTaskByStatus('done')"
-        @drop="moveTask"
-        @delete="deleteTask"
-      />
-
-      <div v-if="tasksStore.loading" class="loading">Loading tasks...</div>
-      <div v-if="tasksStore.error" class="error">{{ tasksStore.error }}</div>
     </div>
   </div>
 </template>

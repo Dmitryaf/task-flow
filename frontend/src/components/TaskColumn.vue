@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import TaskCard from '@/components/TaskCard.vue';
+import { DRAG_DATA_MIME_TYPE } from '@/constants/tasks';
 import { type Task, type TaskStatus } from '@/types/task';
 
 const props = defineProps<{
@@ -13,13 +14,14 @@ const emit = defineEmits<{
   (e: 'delete', taskId: number): void;
 }>();
 
-const onDragStart = (taskId: number) => {
-  return taskId;
-};
-
 const onDrop = (event: DragEvent) => {
-  const taskId = parseInt(event.dataTransfer?.getData('text/plain') || '0');
-  if (taskId) {
+  const rawId = event.dataTransfer?.getData(DRAG_DATA_MIME_TYPE);
+  if (!rawId) {
+    return;
+  }
+
+  const taskId = parseInt(rawId, 10);
+  if (!Number.isNaN(taskId)) {
     emit('drop', taskId, props.status);
   }
 };
@@ -33,13 +35,7 @@ const onDeleteTask = (taskId: number) => {
   <div class="column" @dragover.prevent @drop="onDrop">
     <h3>{{ title }}</h3>
     <div class="tasks">
-      <TaskCard
-        v-for="task in tasks"
-        :key="task.id"
-        :task="task"
-        @dragstart="onDragStart"
-        @delete="onDeleteTask"
-      />
+      <TaskCard v-for="task in tasks" :key="task.id" :task="task" @delete="onDeleteTask" />
     </div>
   </div>
 </template>
