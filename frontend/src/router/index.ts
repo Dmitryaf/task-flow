@@ -2,12 +2,14 @@ import { createRouter, createWebHashHistory } from 'vue-router';
 import LoginPage from '@/pages/LoginPage.vue';
 import RegisterPage from '@/pages/RegisterPage.vue';
 import BoardPage from '@/pages/BoardPage.vue';
+import { ROUTE_BOARD, ROUTE_HOME, ROUTE_LOGIN, ROUTE_REGISTER } from '@/constants/routes';
+import { useAuthStore } from '@/stores/auth';
 
 const routes = [
-  { path: '/login', component: LoginPage },
-  { path: '/register', component: RegisterPage },
-  { path: '/board', component: BoardPage },
-  { path: '/', redirect: '/board' },
+  { path: ROUTE_LOGIN, component: LoginPage },
+  { path: ROUTE_REGISTER, component: RegisterPage },
+  { path: ROUTE_BOARD, component: BoardPage },
+  { path: ROUTE_HOME, redirect: ROUTE_BOARD },
 ];
 
 const router = createRouter({
@@ -15,12 +17,14 @@ const router = createRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
-  const isAuth = !!localStorage.getItem('token');
-  if (to.path === '/board' && !isAuth) {
-    next('/login');
-  } else if ((to.path === '/login' || to.path === '/register') && isAuth) {
-    next('/board');
+router.beforeEach((to, _from, next) => {
+  const authStore = useAuthStore();
+  const isAuth = authStore.isAuthenticated();
+
+  if (to.path === ROUTE_BOARD && !isAuth) {
+    next(ROUTE_LOGIN);
+  } else if ((to.path === ROUTE_LOGIN || to.path === ROUTE_REGISTER) && isAuth) {
+    next(ROUTE_BOARD);
   } else {
     next();
   }

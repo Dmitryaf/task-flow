@@ -1,5 +1,6 @@
 import { tasksApi } from '@/api/endpoints/tasks';
 import { type UpdateTaskData, type CreateTaskData, type Task, type TaskStatus } from '@/types/task';
+import { extractApiError } from '@/utils/apiError';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
@@ -10,11 +11,13 @@ export const useTasksStore = defineStore('tasks', () => {
 
   const fetchTasks = async () => {
     loading.value = true;
+    error.value = null;
+
     try {
       const res = await tasksApi.getAll();
       tasks.value = res.data;
-    } catch (err: any) {
-      error.value = err.response?.data?.error || 'Failed to load tasks';
+    } catch (err: unknown) {
+      error.value = extractApiError(err, 'Failed to load tasks');
     } finally {
       loading.value = false;
     }
@@ -25,8 +28,8 @@ export const useTasksStore = defineStore('tasks', () => {
       const res = await tasksApi.create(data);
       tasks.value.push(res.data);
       return true;
-    } catch (err: any) {
-      error.value = err.response?.data?.error || 'Failed to create task';
+    } catch (err: unknown) {
+      error.value = extractApiError(err, 'Failed to create task');
       return false;
     }
   };
@@ -39,8 +42,8 @@ export const useTasksStore = defineStore('tasks', () => {
         tasks.value[index] = res.data;
       }
       return true;
-    } catch (err: any) {
-      error.value = err.response?.data?.error || 'Failed to update task';
+    } catch (err: unknown) {
+      error.value = extractApiError(err, 'Failed to update task');
       return false;
     }
   };
@@ -50,8 +53,8 @@ export const useTasksStore = defineStore('tasks', () => {
       await tasksApi.delete(id);
       tasks.value = tasks.value.filter((task) => task.id !== id);
       return true;
-    } catch (err: any) {
-      error.value = err.response?.data?.error || 'Failed to delete task';
+    } catch (err: unknown) {
+      error.value = extractApiError(err, 'Failed to delete task');
       return false;
     }
   };
