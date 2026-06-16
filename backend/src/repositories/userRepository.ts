@@ -31,3 +31,7 @@ export function findUserById(id: number): User | undefined {
 export function userExistsByEmail(email: string): boolean {
   return findUserByEmail(email) !== undefined;
 }
+
+export function resetUsersRepository(): void {
+  users.length = 0;
+}

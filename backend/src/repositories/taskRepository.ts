@@ -67,3 +67,8 @@ export function deleteTask(id: number, userId: number): boolean {
   tasks.splice(taskIndex, 1);
   return true;
 }
+
+export function resetTasksRepository(): void {
+  tasks = [];
+  nextTaskId = 1;
+}
