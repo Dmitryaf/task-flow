@@ -12,7 +12,7 @@
     "./src/stores/auth.ts",
     "./src/stores/tasks.ts",
     "./src/types/auth.ts",
-    "./src/types/global.d.ts",
+    "./src/types/env.d.ts",
     "./src/types/index.ts",
     "./src/types/task.ts",
     "./src/utils/apierror.ts",
@@ -22,8 +22,7 @@
     "./src/components/taskcolumn.vue",
     "./src/pages/boardpage.vue",
     "./src/pages/loginpage.vue",
-    "./src/pages/registerpage.vue",
-    "./env.d.ts"
+    "./src/pages/registerpage.vue"
   ],
   "version": "6.0.3"
 }
