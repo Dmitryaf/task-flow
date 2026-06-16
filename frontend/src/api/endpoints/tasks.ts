@@ -2,8 +2,19 @@ import { type UpdateTaskData, type CreateTaskData, type Task } from '@/types/tas
 import api from '..';
 
 export const tasksApi = {
-  getAll: () => api.get<Task[]>('/tasks'),
-  create: (data: CreateTaskData) => api.post<Task>('/tasks', data),
-  update: (id: number, data: UpdateTaskData) => api.put<Task>(`/tasks/${id}`, data),
-  delete: (id: number) => api.delete(`/tasks/${id}`),
+  getAll: async (): Promise<Task[]> => {
+    const response = await api.get<Task[]>('/tasks');
+    return response.data;
+  },
+  create: async (data: CreateTaskData): Promise<Task> => {
+    const response = await api.post<Task>('/tasks', data);
+    return response.data;
+  },
+  update: async (id: number, data: UpdateTaskData): Promise<Task> => {
+    const response = await api.put<Task>(`/tasks/${id}`, data);
+    return response.data;
+  },
+  delete: async (id: number): Promise<void> => {
+    await api.delete(`/tasks/${id}`);
+  },
 };

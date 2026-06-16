@@ -11,7 +11,7 @@
     "format": "prettier --write ."
   },
   "lint-staged": {
-    "**/*.{ts,tsx}": [
+    "**/*.{ts,tsx,vue}": [
       "prettier --list-different",
       "eslint"
     ]

@@ -76,7 +76,7 @@ export async function login(data: LoginInput): Promise<AuthServiceResult> {
     return {
       ok: false,
       status: HTTP_BAD_REQUEST,
-      error: "Invalid password",
+      error: "Invalid password or email",
     };
   }
 

@@ -1,11 +1,10 @@
-import type { AxiosResponse } from 'axios';
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 
 import { authApi } from '@/api/endpoints/auth';
 import { AUTH_TOKEN_STORAGE_KEY, AUTH_USER_STORAGE_KEY } from '@/constants/auth';
 import { type User } from '@/types';
-import { type AuthRes, type LoginData, type RegisterData } from '@/types/auth';
+import { type AuthResponse, type LoginData, type RegisterData } from '@/types/auth';
 import { extractApiError } from '@/utils/apiError';
 
 function loadStoredUser(): User | null {
@@ -27,23 +26,20 @@ export const useAuthStore = defineStore('auth', () => {
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  const setAuth = (authData: AuthRes) => {
+  const setAuth = (authData: AuthResponse) => {
     token.value = authData.token;
     user.value = authData.user;
     localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, authData.token);
     localStorage.setItem(AUTH_USER_STORAGE_KEY, JSON.stringify(authData.user));
   };
 
-  const runAuthAction = async (
-    action: () => Promise<AxiosResponse<AuthRes>>,
-    fallbackError: string,
-  ) => {
+  const runAuthAction = async (action: () => Promise<AuthResponse>, fallbackError: string) => {
     loading.value = true;
     error.value = null;
 
     try {
-      const res = await action();
-      setAuth(res.data);
+      const authData = await action();
+      setAuth(authData);
       return true;
     } catch (err: unknown) {
       error.value = extractApiError(err, fallbackError);

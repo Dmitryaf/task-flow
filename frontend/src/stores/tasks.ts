@@ -14,8 +14,7 @@ export const useTasksStore = defineStore('tasks', () => {
     error.value = null;
 
     try {
-      const res = await tasksApi.getAll();
-      tasks.value = res.data;
+      tasks.value = await tasksApi.getAll();
     } catch (err: unknown) {
       error.value = extractApiError(err, 'Failed to load tasks');
     } finally {
@@ -24,9 +23,11 @@ export const useTasksStore = defineStore('tasks', () => {
   };
 
   const addTask = async (data: CreateTaskData) => {
+    error.value = null;
+
     try {
-      const res = await tasksApi.create(data);
-      tasks.value.push(res.data);
+      const task = await tasksApi.create(data);
+      tasks.value.push(task);
       return true;
     } catch (err: unknown) {
       error.value = extractApiError(err, 'Failed to create task');
@@ -35,11 +36,13 @@ export const useTasksStore = defineStore('tasks', () => {
   };
 
   const updateTask = async (id: number, data: UpdateTaskData) => {
+    error.value = null;
+
     try {
-      const res = await tasksApi.update(id, data);
+      const updatedTask = await tasksApi.update(id, data);
       const index = tasks.value.findIndex((task) => task.id === id);
       if (index !== -1) {
-        tasks.value[index] = res.data;
+        tasks.value[index] = updatedTask;
       }
       return true;
     } catch (err: unknown) {
@@ -49,6 +52,8 @@ export const useTasksStore = defineStore('tasks', () => {
   };
 
   const deleteTask = async (id: number) => {
+    error.value = null;
+
     try {
       await tasksApi.delete(id);
       tasks.value = tasks.value.filter((task) => task.id !== id);

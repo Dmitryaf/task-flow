@@ -66,5 +66,9 @@ export function validateUpdateTaskPayload(
     data.status = status;
   }
 
+  if (Object.keys(data).length === 0) {
+    return { ok: false, error: "At least one field is required" };
+  }
+
   return { ok: true, data };
 }
