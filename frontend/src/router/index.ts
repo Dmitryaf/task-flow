@@ -6,9 +6,9 @@ import { ROUTE_BOARD, ROUTE_HOME, ROUTE_LOGIN, ROUTE_REGISTER } from '@/constant
 import { useAuthStore } from '@/stores/auth';
 
 const routes = [
-  { path: ROUTE_LOGIN, component: LoginPage },
-  { path: ROUTE_REGISTER, component: RegisterPage },
-  { path: ROUTE_BOARD, component: BoardPage },
+  { path: ROUTE_LOGIN, component: LoginPage, meta: { guestOnly: true } },
+  { path: ROUTE_REGISTER, component: RegisterPage, meta: { guestOnly: true } },
+  { path: ROUTE_BOARD, component: BoardPage, meta: { requiresAuth: true } },
   { path: ROUTE_HOME, redirect: ROUTE_BOARD },
 ];
 
@@ -21,9 +21,9 @@ router.beforeEach((to, _from, next) => {
   const authStore = useAuthStore();
   const isAuth = authStore.isAuthenticated();
 
-  if (to.path === ROUTE_BOARD && !isAuth) {
+  if (to.meta.requiresAuth && !isAuth) {
     next(ROUTE_LOGIN);
-  } else if ((to.path === ROUTE_LOGIN || to.path === ROUTE_REGISTER) && isAuth) {
+  } else if (to.meta.guestOnly && isAuth) {
     next(ROUTE_BOARD);
   } else {
     next();
