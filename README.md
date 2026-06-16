@@ -8,7 +8,8 @@ TaskFlow — небольшой fullstack task manager с авторизацие
 - JWT-авторизация;
 - приватные маршруты на frontend;
 - protected routes на backend;
-- создание, редактирование и удаление задач;
+- создание и удаление задач;
+- обновление статуса задач;
 - статусы задач: `todo`, `in-progress`, `done`;
 - kanban-доска с drag-and-drop сменой статуса.
 
@@ -122,6 +123,7 @@ npm run dev
 ```bash
 npm run dev
 npm run build
+npm run start
 npm run test
 ```
 
@@ -130,7 +132,9 @@ npm run test
 ```bash
 npm run dev
 npm run build
+npm run preview
 npm run lint
+npm run format
 npm run test
 ```
 
