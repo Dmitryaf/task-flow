@@ -1,156 +1,91 @@
 # TaskFlow
 
-TaskFlow — небольшой fullstack task manager с авторизацией, CRUD задачами и kanban-доской.
+TaskFlow is a compact full-stack task manager built as a practical demonstration of authenticated frontend and backend workflows.
 
-## Возможности
+Users can register, sign in, and manage their own tasks on a three-column kanban board. The project is intentionally small and uses in-memory backend storage rather than presenting itself as a production service.
 
-- регистрация и логин пользователя;
-- JWT-авторизация;
-- приватные маршруты на frontend;
-- protected routes на backend;
-- создание и удаление задач;
-- обновление статуса задач;
-- статусы задач: `todo`, `in-progress`, `done`;
-- kanban-доска с drag-and-drop сменой статуса.
+## Features
 
-## Стек
+- registration and sign-in with JWT authentication;
+- protected frontend routes and authenticated backend endpoints;
+- task creation, editing, deletion, and status updates;
+- `todo`, `in-progress`, and `done` columns;
+- drag-and-drop status changes;
+- per-user task isolation;
+- runtime validation of authentication and task payloads.
 
-**Frontend**
+## Engineering highlights
 
-- Vue 3
-- TypeScript
-- Pinia
-- Vue Router
-- Axios
-- Vite
-- Vitest
+- Pinia stores keep authentication and task state separate from page components.
+- A shared Axios client attaches authentication tokens to API requests.
+- Express middleware protects task routes before domain operations run.
+- Backend services and repositories separate HTTP handling, business rules, and storage.
+- Runtime validators reject malformed registration, login, create-task, and update-task payloads.
+- Backend integration tests cover authentication, ownership boundaries, validation, and task operations.
+- Frontend tests cover the authentication and task stores, including error states.
 
-**Backend**
+## Stack
 
-- Node.js
-- Express
-- TypeScript
-- JWT
-- bcryptjs
-- Vitest
-- Supertest
+**Frontend:** Vue 3, TypeScript, Pinia, Vue Router, Axios, Vite, Vitest
 
-## Архитектура
+**Backend:** Node.js, Express, TypeScript, JWT, bcryptjs, Vitest, Supertest
 
-Frontend разделён на несколько простых слоёв:
+## Architecture
 
 ```text
-src/
-  api/          # axios client и API-методы
-  components/   # UI-компоненты
-  pages/        # страницы
-  router/       # маршруты и guards
-  stores/       # Pinia stores
-  types/        # TypeScript-типы
-  utils/        # вспомогательные функции
+frontend/src/
+  api/          API client and endpoint modules
+  components/   reusable UI components
+  pages/        route-level screens
+  router/       routes and navigation guards
+  stores/       Pinia state and async workflows
+  types/        TypeScript contracts
+  utils/        shared helpers
+
+backend/src/
+  routes/        HTTP endpoints
+  middleware/    authentication boundary
+  services/      business logic
+  repositories/  in-memory persistence
+  validators/    runtime payload validation
+  config/        server and authentication settings
+  types/         backend contracts
 ```
 
-Backend устроен так:
+## Tests
 
-```text
-src/
-  routes/        # HTTP routes
-  services/      # бизнес-логика
-  repositories/  # in-memory storage
-  validators/    # runtime validation
-  middleware/    # auth middleware
-  config/        # конфигурация
-  constants/     # константы
-  types/         # TypeScript-типы
-```
-
-## Валидация
-
-Backend валидирует входные данные в runtime:
-
-- `register`: name, email, password;
-- `login`: email, password;
-- `create task`: title, optional status;
-- `update task`: optional title, optional status.
-
-## Тесты
-
-В проекте есть базовые тесты.
-
-Backend-тесты проверяют:
-
-- регистрацию и логин;
-- duplicate email;
-- невалидные auth payload;
-- доступ к задачам только с токеном;
-- создание задач;
-- получение только своих задач;
-- запрет update/delete чужих задач;
-- validation для update task.
-
-Frontend-тесты проверяют Pinia stores:
-
-- auth state;
-- login/logout;
-- состояние авторизации;
-- загрузку, создание, обновление и удаление задач;
-- фильтрацию задач по статусу.
-
-## Запуск проекта
-
-### Backend
+Backend tests cover registration, login, invalid payloads, authenticated access, task ownership, and CRUD operations. Frontend tests cover the Pinia authentication and task stores.
 
 ```bash
 cd backend
 npm install
+npm test
+
+cd ../frontend
+npm install
+npm test
+```
+
+## Local setup
+
+Start the backend:
+
+```bash
+cd backend
+npm install
+copy .env.example .env
 npm run dev
 ```
 
-По умолчанию backend запускается на `http://localhost:5000`.
+The default backend URL is `http://localhost:5000`.
 
-### Frontend
+Start the frontend in another terminal:
 
 ```bash
 cd frontend
 npm install
+copy .env.example .env
 npm run dev
 ```
 
-## Команды
-
-### Backend
-
-```bash
-npm run dev
-npm run build
-npm run start
-npm run test
-```
-
-### Frontend
-
-```bash
-npm run dev
-npm run build
-npm run preview
-npm run lint
-npm run format
-npm run test
-```
-
-## Environment variables
-
-В проекте есть `.env.example` файлы.
-
-Backend:
-
-```env
-PORT=5000
-JWT_SECRET=change-me-in-local-env
-```
-
-Frontend:
-
-```env
-VITE_API_BASE_URL=http://localhost:5000/api
-```
+The example environment files define `PORT`, `JWT_SECRET`, and `VITE_API_BASE_URL`. Replace the example JWT secret for local use.
