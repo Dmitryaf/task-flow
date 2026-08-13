@@ -1,8 +1,8 @@
 # TaskFlow
 
-TaskFlow is a compact full-stack task manager built as a practical demonstration of authenticated frontend and backend workflows.
+TaskFlow is a small full-stack task manager. It demonstrates registration, sign-in, protected API requests, and task management in one project.
 
-Users can register, sign in, and manage their own tasks on a three-column kanban board. The project is intentionally small and uses in-memory backend storage rather than presenting itself as a production service.
+Users can create an account, sign in, and manage their own tasks on a three-column kanban board. The backend keeps data in memory, so the project is a demo rather than a production service.
 
 ## Features
 
@@ -12,17 +12,17 @@ Users can register, sign in, and manage their own tasks on a three-column kanban
 - `todo`, `in-progress`, and `done` columns;
 - drag-and-drop status changes;
 - per-user task isolation;
-- runtime validation of authentication and task payloads.
+- validation of account and task data while the server is running.
 
 ## Engineering highlights
 
-- Pinia stores keep authentication and task state separate from page components.
-- A shared Axios client attaches authentication tokens to API requests.
-- Express middleware protects task routes before domain operations run.
-- Backend services and repositories separate HTTP handling, business rules, and storage.
-- Runtime validators reject malformed registration, login, create-task, and update-task payloads.
-- Backend integration tests cover authentication, ownership boundaries, validation, and task operations.
-- Frontend tests cover the authentication and task stores, including error states.
+- Pinia stores keep account and task state outside page components.
+- A shared Axios client adds the authentication token to API requests.
+- Express middleware checks the user before protected task operations run.
+- Backend modules keep HTTP handling, task rules, and storage separate.
+- Runtime validators reject invalid registration, sign-in, and task data.
+- Backend tests cover authentication, access to another user's tasks, validation, and task operations.
+- Frontend tests cover account and task stores, including errors.
 
 ## Stack
 
